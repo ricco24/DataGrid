@@ -1,0 +1,47 @@
+/* Default elements */
+.component-grid .grid-clear { clear: both }
+.component-grid .grid-hidden { display: none }
+
+.component-grid { width: 100%; border: 2px solid #706f6f }
+.component-grid th { border: 1px solid #aaaaaa; background: #706f6f; color: #ffffff; padding: 5px }
+.component-grid th a { text-decoration: none; color: #ffffff }
+.component-grid th a:hover { color: #b2b2ff }
+.component-grid td { border: 1px solid #706f6f; padding: 3px 10px }
+
+/* Row colors */
+.component-grid tbody .grid-even td { background: #ececec }
+.component-grid tbody .grid-odd td { background: #fff }
+.component-grid tbody tr:hover td { background: #ecec98 }
+
+/* Filter */
+.component-grid input[type=text] { width: 90% }
+.component-grid select { width: 90% }
+.component-grid .grid-submit-filter { border: 0; padding-right: 20px; color: #fff; font-weight: bold; cursor: pointer; background : transparent url('../images/grid/search.png') right center no-repeat }
+
+/* Actions */
+.component-grid td.grid-row-actions { text-align: center }
+.component-grid .grid-actions-envelope { display: inline-block; vertical-align: middle}
+
+/* Footer */
+.component-grid tfoot td { text-align: center; font-weight: bold; font-size: 14px; height: 25px; background: #706f6f; color: #ffffff; border-top: 1px solid #c6c6c6; }
+.component-grid tfoot td .grid-paginator { margin-top: 2px; display: inline-block }
+.component-grid tfoot td #frmpagingForm-page { width: 25px; text-align: center }
+.component-grid tfoot .grid-p-left { float: left; display: block; margin: 4px 5px 0 0; width: 16px; height: 16px; background: url('../images/grid/arrow_left.png') }
+.component-grid tfoot .grid-p-right { float: right; display: block; margin: 4px 0 0 5px; width: 16px; height: 16px; background: url('../images/grid/arrow_right.png') }
+.component-grid tfoot .grid-p-left-first { float: left; display: block; margin: 4px 2px 0 0; width: 16px; height: 16px; background: url('../images/grid/arrow_left_fast.png') }
+.component-grid tfoot .grid-p-right-last { float: right; display: block; margin: 4px 0 0 2px; width: 16px; height: 16px; background: url('../images/grid/arrow_right_fast.png') }
+.component-grid tfoot .grid-items { float: right; line-height: 25px; margin-right: 10px; font-weight: bold }
+.component-grid tfoot .grid-reset { float: left; line-height: 25px; margin-right: 20px;  }
+.component-grid tfoot .grid-reset a { color: #fff; text-decoration: none; font-weight: bold; padding-right: 20px; background: url('../images/grid/arrow_refresh.png') right center no-repeat }
+.component-grid tfoot .grid-itemsPerPage { float: right; margin-top: 2px }
+
+/* Icons */
+.component-grid .grid-icon { display: block; width: 16px; height: 16px; float: left; margin-right: 5px }
+.component-grid .grid-icon.add { background: url('../images/grid/add.png') }
+.component-grid .grid-icon.delete { background: url('../images/grid/delete.png') }
+.component-grid .grid-icon.edit { background: url('../images/grid/edit.png') }
+.component-grid .filter-date { border: 2px solid #fff; background: #fff url('../images/grid/filter-date.png') right bottom no-repeat; }
+
+/* Bool icons */
+.component-grid .grid-yes { width: 16px; height: 16px; margin: 0 auto; background: url('../images/grid/yes.png') center center no-repeat }
+.component-grid .grid-no { width: 16px; height: 16px; margin: 0 auto; background: url('../images/grid/no.png') center center no-repeat }

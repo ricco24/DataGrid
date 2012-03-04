@@ -1,0 +1,147 @@
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+
+{* Grid component *}
+<table class="component-grid">
+	<thead>
+		<tr>
+		{* Iterate column names - create th *}
+		{foreach $columns as $key => $column}
+			<th><a href="{link order, $key}">{$column->caption}</a></th>
+		{/foreach}
+			
+		{* If global actions exists make one more column *}
+		{ifset $global_actions}
+			<th class="grid-actions">
+				<div class="grid-actions-envelope">
+					{foreach $global_actions as $key => $global_action}
+						{ifset $global_action['data']}
+							<a href="{plink $global_action['redirect'], (expand) $global_action['data']}" class="grid-icon {$key}" title="{$global_action['title']}"></a>
+						{else}	
+							<a href="{plink $global_action['redirect']}" class="grid-icon {$key}" title="{$global_action['title']}"></a>
+						{/ifset}
+					{/foreach}
+					</div>
+			</th>
+		{elseifset $actions}
+			<th class="grid-actions">Actions</th>
+		{/ifset}
+		</tr>
+		
+		{if $hasFilter}
+			<tr>		
+			{$form->render('begin')}
+			{foreach $columns as $key => $column}
+				<th>
+					{ifset $form[$key]}
+						{$form[$key]->control}
+					{/ifset}
+
+					{if $iterator->isLast()}
+						{ifset $actions}
+						{else}
+							<th class="grid-hidden">{$form['filter']->control}</a></th>
+						{/ifset}
+					{/if}
+				</th>
+			{/foreach}
+			{ifset $actions}
+				<th>{$form['filter']->control}</a></th>
+			{/ifset}
+			{$form->render('end')}
+			</tr>
+		{/if}
+	</thead>
+	
+	<tbody>
+		{foreach $data as $row}
+			<tr class="{$iterator->isEven() ? grid-even : grid-odd}">
+				{foreach $row['columns'] as $key => $data}
+					{if $data['kind'] == 'bool'}
+						<td class="{$gridName}-{$key}"><div class="{$data['value'] == 'Áno' ? 'grid-yes' : 'grid-no'}"></div></td>
+					{elseif $data['kind'] == 'date'}
+						<td class="{$gridName}-{$key}">{$data['value']|date: $data['date_format']}</td>
+					{else}
+						<td class="{$gridName}-{$key}">{$data['value']}</td>
+					{/if}
+				{/foreach}
+				{ifset $actions}
+					<td class="grid-row-actions">
+						<div class="grid-actions-envelope">
+							{foreach $row['actions'] as $key => $action_data}
+								{ifset $action_data['params']}
+									<a href="{plink $action_data['redirect'], (expand) $action_data['params']}" class="grid-icon {$key}" title="{$action_data['title']}"></a>
+								{else}	
+									<a href="{plink $action_data['redirect']}" class="grid-icon {$key}" title="{$action_data['title']}"></a>
+								{/ifset}					
+							{/foreach}
+							<div class="grid-clear"></div>
+						</div>
+					</td>
+				{/ifset}
+			</tr>
+		{/foreach}
+	</tbody>
+		
+	<tfoot>
+		<tr>
+			{var $columns_count = isset($actions) ? count($columns) + 1 : count($columns)}
+			<td colspan="{$columns_count}">			
+				<div class="grid-reset"><a href="{link reset}">Reset</a></div>		
+
+				<div class="grid-paginator">
+					{$pagingForm->render('begin')}
+
+					{if !$paginator->isFirst()}
+						<a class="grid-p-left-first" href="{link page, $paginator->firstPage}"></a>
+						<a class="grid-p-left" href="{link page, $paginator->page - 1}"></a>				
+					{else}
+						<span class="grid-p-left-first"></span>
+						<span class="grid-p-left"></span>
+					{/if}				
+
+						Page {$pagingForm['page']->control} of {$paginator->lastPage}	
+
+					{if !$paginator->isLast()}
+						<a class="grid-p-right-last" href="{link page, $paginator->lastPage}"></a>
+						<a class="grid-p-right" href="{link page, $paginator->page + 1}"></a>
+					{else}
+						<span class="grid-p-right-last"></span>
+						<span class="grid-p-right"></span>
+					{/if}
+					{$pagingForm->render('end')}
+				</div>			
+
+				<div class="grid-itemsPerPage">
+					{$dropdownForm->render('begin')}
+						{$dropdownForm['itemsPerPage']->control}
+					{$dropdownForm->render('end')}
+				</div>
+
+				{var $paginator_to = $paginator->offset + $paginator->itemsPerPage > $paginator->itemCount ? $paginator->itemCount : $paginator->offset + $paginator->itemsPerPage }
+				<div class="grid-items">Items {$paginator->offset + 1} - {$paginator_to} of {$paginator->itemCount}</div>	
+				<div class="grid-clear"></div>
+			</td>
+		</tr>
+	</tfoot>
+</table>
+
+
+
+{* CSS - dont remove ! *}
+<style>
+	{foreach $columns as $key => $column}
+		{if !empty($column->style)}
+			.component-grid .{$gridName}-{$key} { {!$column->style} }
+		{/if}
+	{/foreach}
+</style>
+
+
+
+{* Datepicker - need to implement JQuery UI datepicker *}
+<script>
+	$(function() {
+		$( ".filter-date" ).datepicker();
+		$( ".filter-date").datepicker( "option", "dateFormat", 'yy-mm-dd' );
+	});
+</script>

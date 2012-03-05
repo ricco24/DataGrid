@@ -141,7 +141,11 @@
 {* Datepicker - need to implement JQuery UI datepicker *}
 <script>
 	$(function() {
-		$( ".filter-date" ).datepicker();
+		$( ".filter-date").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true
+		});
 		$( ".filter-date").datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	});
 </script>

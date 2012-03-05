@@ -337,6 +337,7 @@ class DataGrid extends Nette\Application\UI\Control
 						break;
 					case 'date':
 						$form->addText($key)
+							->setHtmlId($this->name . '-' .$key . '-date-filter')
 							->getControlPrototype()->class('filter-' . $value->filter);
 						break;					
 					case 'int':
@@ -443,7 +444,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Render function
 	 */
 	public function render() {
-		$this->template->setFile(__DIR__ . '/templates/dataGrid.latte');
+		$this->template->setFile(__DIR__ . '/Templates/dataGrid.latte');
 		
 		$filter_form = $this['form'];
 		$paging_form = $this['pagingForm'];

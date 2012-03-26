@@ -80,17 +80,15 @@ class DataSource extends Nette\Object
 						$data['actions'][$action_key]['title'] = $action['title'];
 						$data['actions'][$action_key]['redirect'] = $action['redirect'];
 						
-						if(isset($action['data'])){
-							foreach($action['data'] as $action_data) {
-								if($action_data == $key) {								
-									$data['actions'][$action_key]['params'][$action_data] = $row->$key;								
-								}
+						if(isset($action['data'])){ 
+							foreach($action['data'] as $action_data) {			
+								$data['actions'][$action_key]['params'][$action_data] = $row->$action_data;								
 							}
 						}
 					}
-				}			
+				} 			
 			}
-			
+
 			$data_array[] = $data;
 			//need unset -- else have problem with creating action params strings
 			unset($data);

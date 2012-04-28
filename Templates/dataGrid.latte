@@ -147,5 +147,9 @@
 			showButtonPanel: true
 		});
 		$( ".filter-date").datepicker( "option", "dateFormat", 'yy-mm-dd' );
+		
+		{foreach $dates as $name => $date}
+			$("#{!$gridName}-{!$name}-date-filter[name={!$name}]").datepicker("setDate", {$date});
+		{/foreach}
 	});
 </script>

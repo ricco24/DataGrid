@@ -25,7 +25,7 @@ class Column extends Nette\ComponentModel\Component
 	
 	/** @var array		Select values - select filter variable */
 	public $select;
-
+	
 	
 	
 	/**

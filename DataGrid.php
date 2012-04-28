@@ -281,6 +281,7 @@ class DataGrid extends Nette\Application\UI\Control
 		
 		return isset($filter_table) ? $filter_table : NULL;
 	}
+
 	
 	
 	
@@ -469,6 +470,9 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->gridName = $this->getName();
 		$this->template->hasFilter = $this->hasFilter;
 		
+		//date array inicialize -> array for datepicker default values (jQuery)
+		$dates = array();
+		
 		//set defaults to filter form
 		if(isSet($this->filter)) {
 			$defaults = array();
@@ -476,10 +480,16 @@ class DataGrid extends Nette\Application\UI\Control
 				if($value['kind'] == 'bool') {
 					$this->filter[$key]['value'] = $this->boolToString($value['value']);
 				}
+				if($value['kind'] == 'date') {
+					$dates[$key] = $value['value'];
+				}
 				$defaults[$key] = $this->filter[$key]['value'];
 			}
 			$filter_form->setDefaults($defaults);
 		}
+		
+		
+		$this->template->dates = $dates;
 		
 		$this->saveSession();		
 		$this->template->render();

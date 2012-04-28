@@ -8,7 +8,7 @@ use Nette,
 class DateColumn extends Column
 {
 	/** @var string		Date format */
-	public $date_format = "d.m.Y";
+	public $date_format = "d.M.Y";
 	
 	
 	

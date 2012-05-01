@@ -39,13 +39,14 @@
 					{if $iterator->isLast()}
 						{ifset $actions}
 						{else}
-							<th class="grid-hidden">{$form['filter']->control}</a></th>
+							<div class="grid-hidden">{$form['filter']->control}</div>
+							<div class="grid-clear"></div>
 						{/ifset}
 					{/if}
 				</th>
 			{/foreach}
 			{ifset $actions}
-				<th>{$form['filter']->control}</a></th>
+				<th>{$form['filter']->control}</th>
 			{/ifset}
 			{$form->render('end')}
 			</tr>

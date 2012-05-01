@@ -1,6 +1,6 @@
 /* Default elements */
 .component-grid .grid-clear { clear: both }
-.component-grid .grid-hidden { display: none }
+.component-grid .grid-hidden .grid-submit-filter { width: 10px; height: 0px; float: right; visibility: hidden }
 
 .component-grid { width: 100%; border: 2px solid #706f6f }
 .component-grid th { border: 1px solid #aaaaaa; background: #706f6f; color: #ffffff; padding: 5px }

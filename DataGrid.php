@@ -107,16 +107,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string $caption		Render column name
 	 * @return Column\TextColumn 
 	 */
-	public function addColumn($column_name, $caption) {
-		
-		if(in_array($column_name, $this->dataSource->exist_columns)) {
-			if(!array_key_exists($column_name, $this->th)) {
-				$this->th[$column_name] = new Columns\TextColumn($this, $caption);
-			} else {
-				throw new \Exception("Two columns have the same source name - *$column_name*");
-			}
+	public function addColumn($column_name, $caption) {		
+		if(!array_key_exists($column_name, $this->th)) {
+			$this->th[$column_name] = new Columns\TextColumn($this, $caption);
 		} else {
-			throw new \Exception("Datasource not contain a column named *$column_name*");
+			throw new \Exception("Two columns have the same source name - *$column_name*");
 		}
 		
 		return $this->th[$column_name];
@@ -131,14 +126,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @return Column\BoolColumn 
 	 */
 	public function addBoolColumn($column_name, $caption) {
-		if(in_array($column_name, $this->dataSource->exist_columns)) {
-			if(!array_key_exists($column_name, $this->th)) {
-				$this->th[$column_name] = new Columns\BoolColumn($this, $caption);
-			} else {
-				throw new \Exception("Two columns have the same source name - *$column_name*");
-			}
+		if(!array_key_exists($column_name, $this->th)) {
+			$this->th[$column_name] = new Columns\BoolColumn($this, $caption);
 		} else {
-			throw new \Exception("Datasource not contain a column named *$column_name*");
+			throw new \Exception("Two columns have the same source name - *$column_name*");
 		}
 		
 		return $this->th[$column_name];
@@ -153,14 +144,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @return Column\DateColumn	
 	 */
 	public function addDateColumn($column_name, $caption) {
-		if(in_array($column_name, $this->dataSource->exist_columns)) {
-			if(!array_key_exists($column_name, $this->th)) {
-				$this->th[$column_name] = new Columns\DateColumn($this, $caption);
-			} else {
-				throw new \Exception("Two columns have the same source name - *$column_name*");
-			}
+		if(!array_key_exists($column_name, $this->th)) {
+			$this->th[$column_name] = new Columns\DateColumn($this, $caption);
 		} else {
-			throw new \Exception("Datasource not contain a column named *$column_name*");
+			throw new \Exception("Two columns have the same source name - *$column_name*");
 		}
 		
 		return $this->th[$column_name];
@@ -469,6 +456,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->paginator = $this->paginator;
 		$this->template->gridName = $this->getName();
 		$this->template->hasFilter = $this->hasFilter;
+		$this->template->emptySource = $this->dataSource->isEmpty();
 		
 		//date array inicialize -> array for datepicker default values (jQuery)
 		$dates = array();

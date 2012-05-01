@@ -53,33 +53,39 @@
 	</thead>
 	
 	<tbody>
-		{foreach $data as $row}
-			<tr class="{$iterator->isEven() ? grid-even : grid-odd}">
-				{foreach $row['columns'] as $key => $data}
-					{if $data['kind'] == 'bool'}
-						<td class="{$gridName}-{$key}"><div class="{$data['value'] == 'Áno' ? 'grid-yes' : 'grid-no'}"></div></td>
-					{elseif $data['kind'] == 'date'}
-						<td class="{$gridName}-{$key}">{$data['value']|date: $data['date_format']}</td>
-					{else}
-						<td class="{$gridName}-{$key}">{$data['value']}</td>
-					{/if}
-				{/foreach}
-				{ifset $actions}
-					<td class="grid-row-actions">
-						<div class="grid-actions-envelope">
-							{foreach $row['actions'] as $key => $action_data}
-								{ifset $action_data['params']}
-									<a href="{plink $action_data['redirect'], (expand) $action_data['params']}" class="grid-icon {$key}" title="{$action_data['title']}"></a>
-								{else}	
-									<a href="{plink $action_data['redirect']}" class="grid-icon {$key}" title="{$action_data['title']}"></a>
-								{/ifset}					
-							{/foreach}
-							<div class="grid-clear"></div>
-						</div>
-					</td>
-				{/ifset}
-			</tr>
-		{/foreach}
+		{if $emptySource}
+			<tr>
+				<td colspan="{count($columns)}">Momentálne sa tu nenachadzajú žiadne zaznamy.</td>
+			<tr>
+		{else}
+			{foreach $data as $row}
+				<tr class="{$iterator->isEven() ? grid-even : grid-odd}">
+					{foreach $row['columns'] as $key => $data}
+						{if $data['kind'] == 'bool'}
+							<td class="{$gridName}-{$key}"><div class="{$data['value'] == 'Áno' ? 'grid-yes' : 'grid-no'}"></div></td>
+						{elseif $data['kind'] == 'date'}
+							<td class="{$gridName}-{$key}">{$data['value']|date: $data['date_format']}</td>
+						{else}
+							<td class="{$gridName}-{$key}">{$data['value']}</td>
+						{/if}
+					{/foreach}
+					{ifset $actions}
+						<td class="grid-row-actions">
+							<div class="grid-actions-envelope">
+								{foreach $row['actions'] as $key => $action_data}
+									{ifset $action_data['params']}
+										<a href="{plink $action_data['redirect'], (expand) $action_data['params']}" class="grid-icon {$key}" title="{$action_data['title']}"></a>
+									{else}	
+										<a href="{plink $action_data['redirect']}" class="grid-icon {$key}" title="{$action_data['title']}"></a>
+									{/ifset}					
+								{/foreach}
+								<div class="grid-clear"></div>
+							</div>
+						</td>
+					{/ifset}
+				</tr>
+			{/foreach}
+		{/if}
 	</tbody>
 		
 	<tfoot>
@@ -118,7 +124,7 @@
 				</div>
 
 				{var $paginator_to = $paginator->offset + $paginator->itemsPerPage > $paginator->itemCount ? $paginator->itemCount : $paginator->offset + $paginator->itemsPerPage }
-				<div class="grid-items">Items {$paginator->offset + 1} - {$paginator_to} of {$paginator->itemCount}</div>	
+				<div class="grid-items">Items {if $emptySource}0{else}{$paginator->offset + 1}{/if} - {$paginator_to} of {$paginator->itemCount}</div>	
 				<div class="grid-clear"></div>
 			</td>
 		</tr>

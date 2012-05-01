@@ -11,9 +11,6 @@ class DataSource extends Nette\Object
 	/** @var Nette\Database\Table\Selection		Notorm datasource */
 	private $notorm_source;
 	
-	/** @var array		Names of existing columns in datasource */
-	public $exist_columns;
-	
 	
 	
 	/**
@@ -21,22 +18,20 @@ class DataSource extends Nette\Object
 	 */
 	public function __construct($source) {
 		$this->notorm_source = $source;
-		$this->getExistColumns();
 	}
 	
 	
 	
-	/**
-	 * Find existing columns in datasource
-	 */
-	public function getExistColumns() {
-		foreach($this->notorm_source as $row) {
-			$result = array_keys(iterator_to_array($row)); 
-			break;
-		}
+	public function isEmpty() {
+		$count = $this->notorm_source->count('*');
 		
-		$this->exist_columns = $result;
+		if($count > 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
+	
 	
 	
 	
@@ -48,6 +43,11 @@ class DataSource extends Nette\Object
 	 */
 	public function getData($columns, $actions = NULL) {
 		$data_array = array();
+		
+		if($this->isEmpty()) {
+			return $data_array;
+		}
+		
 		foreach($this->notorm_source as $row) {
 			foreach($columns as $key => $value) {
 				

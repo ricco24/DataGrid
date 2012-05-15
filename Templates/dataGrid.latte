@@ -1,7 +1,7 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 
 {* Grid component *}
-<table class="component-grid">
+<table class="component-grid {$gridName}">
 	<thead>
 		<tr>
 		{* Iterate column names - create th *}
@@ -11,7 +11,11 @@
 			
 		{* If global actions exists make one more column *}
 		{ifset $global_actions}
-			<th class="grid-actions">
+			{if $hasForms}
+				<th colspan="2" class="grid-actions">
+			{else}
+				<th class="grid-actions">
+			{/if}
 				<div class="grid-actions-envelope">
 					{foreach $global_actions as $key => $global_action}
 						{ifset $global_action['data']}
@@ -23,7 +27,13 @@
 					</div>
 			</th>
 		{elseifset $actions}
-			<th class="grid-actions">Actions</th>
+			{if $hasForms}
+				<th colspan="2" class="grid-actions">Actions</th>
+			{else}
+				<th class="grid-actions">Actions</th>
+			{/if}
+		{elseif $hasForms}
+			<th></th>
 		{/ifset}
 		</tr>
 		
@@ -45,9 +55,19 @@
 					{/if}
 				</th>
 			{/foreach}
+				
 			{ifset $actions}
-				<th>{$form['filter']->control}</th>
+				{if $hasForms}
+					<th colspan="2">{$form['filter']->control}</th>
+				{else}
+					<th>{$form['filter']->control}</th>
+				{/if}
+			{else}
+				{if $hasForms}
+					<th>{$form['filter']->control}</th>
+				{/if}	
 			{/ifset}
+			
 			{$form->render('end')}
 			</tr>
 		{/if}
@@ -84,6 +104,14 @@
 							</div>
 						</td>
 					{/ifset}
+						
+					{* Render multiplier forms on last column of grid - if enabled *}
+					{if $hasForms}
+						<td>
+							{var $name = 'rowForm-'.$row['form'][$formIdentificator]}
+							{control $name}
+						</td>
+					{/if}
 				</tr>
 			{/foreach}
 		{/if}
@@ -92,7 +120,7 @@
 	<tfoot>
 		<tr>
 			{var $columns_count = isset($actions) ? count($columns) + 1 : count($columns)}
-			<td colspan="{$columns_count}">			
+			<td colspan="{if $hasForms}{$columns_count + 1}{else}{$columns_count}{/if}">			
 				<div class="grid-reset"><a href="{link reset}">Reset</a></div>		
 
 				<div class="grid-paginator">
@@ -142,6 +170,8 @@
 			.component-grid .{$gridName}-{$key} { {!$column->style} }
 		{/if}
 	{/foreach}
+
+	.component-grid .grid-row-actions { {!$actionColumnStyle} }
 </style>
 
 

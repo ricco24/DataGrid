@@ -55,6 +55,16 @@ class DataGrid extends Nette\Application\UI\Control
 	/** @var boolean	Has DataGrid a filter */
 	public $hasFilter = FALSE;
 	
+	/** @var array	Row forms data (callback, identificator) */
+	public $rowForms = array(
+		'hasForms' => FALSE,
+		'identificator' => 'id',
+		'callback' => NULL
+	);
+	
+	/** @var string		CSS style for action column */
+	public $actionColumnStyle;
+
 	
 	
 	/**
@@ -78,6 +88,31 @@ class DataGrid extends Nette\Application\UI\Control
 	
 	
 	// ******************** public setters ********************************
+	
+	
+	
+	/**
+	 * Set css style for action column
+	 * @param string $style 
+	 */
+	public function setActionColumnStyle($style) {
+		$this->actionColumnStyle = $style;
+	} 
+	
+	
+	
+	/**
+	 *
+	 * @param type $callback
+	 * @param type $identificator 
+	 */
+	public function addForms($callback, $identificator = 'id') {
+		$this->rowForms = array(
+			'hasForms' => TRUE,
+			'callback' => $callback,
+			'identificator' => $identificator
+		);
+	}
 	
 	
 	
@@ -190,6 +225,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->actions[$action_name]['data'] = $data; 
 		}
 	}
+	
 		
 	
 	
@@ -227,7 +263,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->setPaginator();
 		$this->setLimit();
 		
-		return $this->dataSource->getData($this->th, $this->actions);
+		return $this->dataSource->getData($this->th, $this->actions, $this->rowForms);
 	}
 	
 	
@@ -240,6 +276,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->dataSource->sortData($this->order);
 		}
 	}
+
 	
 	
 	
@@ -424,6 +461,18 @@ class DataGrid extends Nette\Application\UI\Control
 	
 	
 	
+	/**
+	 * Multiplicator function to create form on every row
+	 * @param string $name
+	 * @return \Nette\Application\UI\Multiplier 
+	 */	
+	protected function createComponentRowForm($name)
+    {
+        return new \Nette\Application\UI\Multiplier($this->rowForms['callback']);
+    }
+	
+	
+	
 	//******************************* Render ***********************************
 
 
@@ -449,14 +498,21 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->form = $filter_form;
 		$this->template->pagingForm = $paging_form;
 		$this->template->dropdownForm = $dropdown_form;
+		
 		$this->template->columns = $this->th;
 		$this->template->actions = $this->actions;
 		$this->template->global_actions = $this->global_actions;
-		$this->template->data = $this->getData();;		
+		$this->template->data = $this->getData();		
 		$this->template->paginator = $this->paginator;
 		$this->template->gridName = $this->getName();
 		$this->template->hasFilter = $this->hasFilter;
 		$this->template->emptySource = $this->dataSource->isEmpty();
+		
+		$this->template->hasForms = $this->rowForms['hasForms'];
+		$this->template->formIdentificator = $this->rowForms['identificator'];
+		
+		$this->template->actionColumnStyle = $this->actionColumnStyle;
+		
 		
 		//date array inicialize -> array for datepicker default values (jQuery)
 		$dates = array();
@@ -475,7 +531,6 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 			$filter_form->setDefaults($defaults);
 		}
-		
 		
 		$this->template->dates = $dates;
 		

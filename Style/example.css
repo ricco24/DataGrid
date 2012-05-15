@@ -24,7 +24,7 @@
 
 /* Footer */
 .component-grid tfoot td { text-align: center; font-weight: bold; font-size: 14px; height: 25px; background: #706f6f; color: #ffffff; border-top: 1px solid #c6c6c6; }
-.component-grid tfoot td .grid-paginator { margin-top: 2px; display: inline-block }
+.component-grid tfoot td .grid-paginator { margin-top: 2px; display: inline-block; min-width: 180px }
 .component-grid tfoot td #frmpagingForm-page { width: 25px; text-align: center }
 .component-grid tfoot .grid-p-left { float: left; display: block; margin: 4px 5px 0 0; width: 16px; height: 16px; background: url('../images/grid/arrow_left.png') }
 .component-grid tfoot .grid-p-right { float: right; display: block; margin: 4px 0 0 5px; width: 16px; height: 16px; background: url('../images/grid/arrow_right.png') }

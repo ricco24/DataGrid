@@ -6,7 +6,7 @@ use Nette,
 		Nette\Utils\Html,
 		Nette\Diagnostics\Debugger;
 
-class DataSource extends Nette\Object
+class DataSource extends Nette\ComponentModel\Component
 {
 	/** @var Nette\Database\Table\Selection		Notorm datasource */
 	private $notorm_source;
@@ -41,7 +41,7 @@ class DataSource extends Nette\Object
 	 * @param array $actions	Array of actions
 	 * @return array
 	 */
-	public function getData($columns, $actions = NULL) {
+	public function getData($columns, $actions = NULL, $rowForms = NULL) {
 		$data_array = array();
 		
 		if($this->isEmpty()) {
@@ -49,6 +49,11 @@ class DataSource extends Nette\Object
 		}
 		
 		foreach($this->notorm_source as $row) {
+			
+			if(isSet($rowForms)) {
+				$data['form'][$rowForms['identificator']] = $row->$rowForms['identificator'];
+			}
+			
 			foreach($columns as $key => $value) {
 				
 				//set column kind
@@ -86,9 +91,8 @@ class DataSource extends Nette\Object
 							}
 						}
 					}
-				} 			
+				} 					
 			}
-
 			$data_array[] = $data;
 			//need unset -- else have problem with creating action params strings
 			unset($data);

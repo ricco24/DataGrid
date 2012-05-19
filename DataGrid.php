@@ -64,6 +64,14 @@ class DataGrid extends Nette\Application\UI\Control
 	
 	/** @var string		CSS style for action column */
 	public $actionColumnStyle;
+	
+	/** @var array		Array of prsistent parameters - used only for iteratinos */
+	public $persistent_params = array(
+		'page',
+		'order',
+		'filter',
+		'itemsPerPage'
+	);
 
 	
 	
@@ -92,28 +100,27 @@ class DataGrid extends Nette\Application\UI\Control
 	
 	
 	/**
+	 * Set default grid ordering	
+	 * @param string $column
+	 * @param string $way 
+	 */
+	public function setDefaultOrder($column, $way = 'asc') {
+		$this->order = array(
+			'column' => $column,
+			'way' => $way
+		);
+	}
+	
+	
+	
+	/**
 	 * Set css style for action column
 	 * @param string $style 
 	 */
 	public function setActionColumnStyle($style) {
 		$this->actionColumnStyle = $style;
 	} 
-	
-	
-	
-	/**
-	 *
-	 * @param type $callback
-	 * @param type $identificator 
-	 */
-	public function addForms($callback, $identificator = 'id') {
-		$this->rowForms = array(
-			'hasForms' => TRUE,
-			'callback' => $callback,
-			'identificator' => $identificator
-		);
-	}
-	
+		
 	
 	
 	/**
@@ -132,6 +139,21 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function setItemsPerPage($items_per_page) {
 		$this->itemsPerPage = (int) $items_per_page;
+	}
+		
+	
+	
+	/**
+	 *
+	 * @param type $callback
+	 * @param type $identificator 
+	 */
+	public function addForms($callback, $identificator = 'id') {
+		$this->rowForms = array(
+			'hasForms' => TRUE,
+			'callback' => $callback,
+			'identificator' => $identificator
+		);
 	}
 	
 	
@@ -258,7 +280,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getData() {
 		
-		$this->setfilter();
+		$this->setFilter();
 		$this->setOrder();			
 		$this->setPaginator();
 		$this->setLimit();
@@ -279,12 +301,23 @@ class DataGrid extends Nette\Application\UI\Control
 
 	
 	
-	
 	/**
 	 * Apply filters
 	 */
 	public function setFilter() {
-		$filter_table = $this->getFilterTable();
+		// If no session filter set -> default filter state
+		if(!isset($this->gridSession->filter)) {
+			foreach($this->th as $column_name => $column) {
+				if($column->getDefaultFilter()) {
+					$this->filter[$column_name] = array(
+						'value' => $column->getDefaultFilter(),
+						'kind' => $column->filter
+					);
+				}
+			}
+		}
+		
+		$filter_table = $this->getFilterTable();		
 		if(!empty($this->filter)) {
 			$this->dataSource->filterData($this->filter, $filter_table);
 		}
@@ -588,9 +621,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Handle reset grid state
 	 */
 	public function handleReset() {
-		$this->page = '1';
-		$this->filter = NULL;
-		$this->order = NULL;
+		$this->emptySession();
 		
 		$this->finalize();
 	}
@@ -632,13 +663,26 @@ class DataGrid extends Nette\Application\UI\Control
 	
 	
 	/**
+	 * Clean gridSession and empty all prsistent params -> set to NULL
+	 */
+	public function emptySession() {	
+		// Unset all presistent params in gridSession and set all presistent params to NULL
+		foreach($this->persistent_params as $persistent_param) {
+			unset($this->gridSession->$persistent_param);
+			$this->$persistent_param = NULL;
+		}
+	}
+	
+	
+	
+	/**
 	 * Load all params from session variable
 	 */
 	public function loadSession() {
 		$this->page = isset($this->gridSession->page) ? $this->gridSession->page : $this->page;
-		$this->order = $this->gridSession->order;
-		$this->filter = $this->gridSession->filter;
-		$this->itemsPerPage = isset($this->gridSession->itemsPerPage) ? $this->gridSession->itemsPerPage : $this->itemsPerPage;
+		$this->order = isset($this->gridSession->order) ? $this->gridSession->order : $this->order;
+		$this->filter = isset($this->gridSession->filter) ? $this->gridSession->filter : $this->filter;
+		$this->itemsPerPage = isset($this->gridSession->itemsPerPage) ? $this->gridSession->itemsPerPage : $this->itemsPerPage;		
 	}
 	
 	

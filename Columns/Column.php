@@ -17,6 +17,9 @@ class Column extends Nette\ComponentModel\Component
 	/** @var bool */
 	public $filter = FALSE;
 	
+	/** @var string		Default filter state for column */
+	public $default_filter;
+	
 	/** @var string		Full name of column eg. table.column - need for filtering joined (multi tables) sources */
 	public $full_name;
 	
@@ -118,6 +121,32 @@ class Column extends Nette\ComponentModel\Component
 		$this->parent->hasFilter = TRUE;
 		
 		return $this;
+	}
+	
+	
+	
+	/**
+	 * Set default filter state for column
+	 * @param stryng $filter
+	 * @return Column 
+	 */
+	public function setDefaultFilter($filter) {
+		if(!$this->filter) {
+			throw new \Exception('This column havent got filter.');
+		}		
+		$this->default_filter = $filter;
+		
+		return $this;
+	}
+	
+	
+	
+	/**
+	 * Get default filter state for column
+	 * @return string 
+	 */
+	public function getDefaultFilter() {
+		return $this->default_filter;
 	}
 	
 	
